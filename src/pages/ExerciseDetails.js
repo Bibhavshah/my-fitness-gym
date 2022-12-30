@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box } from "@mui/material";
 
@@ -7,7 +7,7 @@ import Detail from "../components/Detail";
 import ExerciseVideos from "../components/ExerciseVideos";
 import SimilarExercises from "../components/SimilarExercises";
 
-const ExerciseDetails = () => {
+const ExerciseDetail = () => {
   const [exerciseDetail, setExerciseDetail] = useState({});
   const [exerciseVideos, setExerciseVideos] = useState([]);
   const [targetMuscleExercises, setTargetMuscleExercises] = useState([]);
@@ -15,22 +15,24 @@ const ExerciseDetails = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    const fetchExerciseDetails = async () => {
-      const exericeDbUrl = "https://exercisedb.p.rapidapi.com";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    const fetchExercisesData = async () => {
+      const exerciseDbUrl = "https://exercisedb.p.rapidapi.com";
       const youtubeSearchUrl =
         "https://youtube-search-and-download.p.rapidapi.com";
 
-      const exerciseDetailsData = await fetchData(
-        `${exericeDbUrl}/exercises/exercise/${id}`,
+      const exerciseDetailData = await fetchData(
+        `${exerciseDbUrl}/exercises/exercise/${id}`,
         exerciseOptions
       );
-      setExerciseDetail(exerciseDetailsData);
+      setExerciseDetail(exerciseDetailData);
 
-      const youtubeVideosData = await fetchData(
-        `${youtubeSearchUrl}/search?query=${exerciseDetailsData.name}exercise`,
+      const exerciseVideosData = await fetchData(
+        `${youtubeSearchUrl}/search?query=${exerciseDetailData.name} exercise`,
         youtubeOptions
       );
-      setExerciseVideos(youtubeVideosData.contents);
+      setExerciseVideos(exerciseVideosData.contents);
 
       const targetMuscleExercisesData = await fetchData(
         `${exerciseDbUrl}/exercises/target/${exerciseDetailData.target}`,
@@ -44,10 +46,14 @@ const ExerciseDetails = () => {
       );
       setEquipmentExercises(equimentExercisesData);
     };
-    fetchExerciseDetails();
+
+    fetchExercisesData();
   }, [id]);
+
+  if (!exerciseDetail) return <div>No Data</div>;
+
   return (
-    <Box>
+    <Box sx={{ mt: { lg: "96px", xs: "60px" } }}>
       <Detail exerciseDetail={exerciseDetail} />
       <ExerciseVideos
         exerciseVideos={exerciseVideos}
@@ -61,4 +67,4 @@ const ExerciseDetails = () => {
   );
 };
 
-export default ExerciseDetails;
+export default ExerciseDetail;
