@@ -33,7 +33,7 @@ const Exercises = React.memo(({ exercises, setExercises, bodyPart }) => {
   const exercisesPerPage = 9;
   const indexOfLastExercise = currentPage * exercisesPerPage;
   const indexOfFirstexercise = indexOfLastExercise - exercisesPerPage;
-  const currentExercises = exercises.slice(
+  const currentExercises = exercises?.slice(
     indexOfFirstexercise,
     indexOfLastExercise
   );
@@ -48,7 +48,7 @@ const Exercises = React.memo(({ exercises, setExercises, bodyPart }) => {
         flexWrap="wrap"
         justifyContent="center"
       >
-        {currentExercises.map((exercise, index) => (
+        {currentExercises?.map((exercise, index) => (
           <ExerciseCard key={index} exercise={exercise} />
         ))}
       </Stack>
